@@ -46,7 +46,7 @@ To train the AI agent and visualize its progress, follow these steps:
 
 ## Contributing
 
-i welcome contributions from the community to improve Snake AI. If you'd like to contribute, please follow these guidelines:
+Contributions are welcomed. If you'd like to contribute, please follow these guidelines:
 
 1. Fork the repository and create your branch.
 2. Make your changes and test them thoroughly.
