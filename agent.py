@@ -3,6 +3,9 @@ import random
 import numpy as np
 from snake_game import SnakeGameAI, Direction, Point
 from collections import deque
+from model import Linear_QNet, QTrainer
+from helper import plot
+
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
@@ -13,10 +16,10 @@ class Agent:
     def _init__(self):
         self.n_games = 0
         self.epsilon = 0
-        self.gamma = 0
+        self.gamma = 0.9
         self.memory = deque(maxlen=MAX_MEMORY)
-        self.model = None
-        self.trainer = None
+        self.model = Linear_QNet(11, 256, 3)
+        self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
 
     def get_state(self, snake_game):
@@ -79,9 +82,6 @@ class Agent:
         states, actions, rewards, next_states, dones = zip(*mini_sample)   
         self.trainer.train_step(states, actions, rewards, next_states, dones)
 
-        #for state, action, reward, next_state, done in mini_sample:
-            #self.trainer.train_step(state, action, reward, next_state, done)
-
 
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
@@ -95,7 +95,7 @@ class Agent:
             final_move[move] = 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
-            prediction = self.model.predict(state0)
+            prediction = self.model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
 
@@ -129,12 +129,15 @@ class Agent:
 
                 if score > record:
                     record = score
+                    agent.model.save()
                     
                 print('Game', agent.n_games, 'Score', score, 'Record:', record)
 
-
-
-
+                plot_scores.append(score)
+                total_score += score
+                mean_score = total_score /  agent.n_games
+                plot_mean_scores.append(mean_score)
+                plot(plot_scores, plot_mean_scores)
 
     if __name__=='__main__':
         train()
