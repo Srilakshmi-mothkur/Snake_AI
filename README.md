@@ -44,7 +44,7 @@ To train the AI agent and visualize its progress, follow these steps:
 
 3. Monitor the training progress with the plot displayed on the screen.
 
-## Contributing
+## Contributions
 
 Contributions are welcomed. If you'd like to contribute, please follow these guidelines:
 
