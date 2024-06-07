@@ -13,7 +13,7 @@ LR = 0.001
 
 class Agent:
 
-    def _init__(self):
+    def __init__(self):
         self.n_games = 0
         self.epsilon = 0
         self.gamma = 0.9
@@ -70,7 +70,7 @@ class Agent:
     
     
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append(state, action, reward, next_state, done)
+        self.memory.append((state, action, reward, next_state, done))
 
 
     def train_long_memory(self):
@@ -102,42 +102,42 @@ class Agent:
         return final_move
     
 
-    def train():
-        plot_scores = []
-        plot_mean_scores = []
-        total_score = 0
-        record = 0
-        agent = Agent()
-        snake_game = SnakeGameAI()
-        while True:
-            state_old = agent.get_state(snake_game)
+def train():
+    plot_scores = []
+    plot_mean_scores = []
+    total_score = 0
+    record = 0
+    agent = Agent()
+    snake_game = SnakeGameAI()
+    while True:
+        state_old = agent.get_state(snake_game)
 
-            final_move = agent.get_action(state_old)
+        final_move = agent.get_action(state_old)
 
-            reward, done, score = snake_game.play_step(final_move)
+        reward, done, score = snake_game.play_step(final_move)
 
-            state_new =  agent.get_state(snake_game)
+        state_new =  agent.get_state(snake_game)
 
-            agent.train_short_memory(state_old, final_move, reward, state_new, done)
+        agent.train_short_memory(state_old, final_move, reward, state_new, done)
 
-            agent.remember(state_old, final_move, reward, state_new, done)
+        agent.remember(state_old, final_move, reward, state_new, done)
 
-            if done:
-                snake_game.reset()
-                agent.n_games += 1
-                agent.train_long_memory()
+        if done:
+            snake_game.reset()
+            agent.n_games += 1
+            agent.train_long_memory()
 
-                if score > record:
-                    record = score
-                    agent.model.save()
+            if score > record:
+                record = score
+                agent.model.save()
                     
-                print('Game', agent.n_games, 'Score', score, 'Record:', record)
+            print('Game', agent.n_games, 'Score', score, 'Record:', record)
 
-                plot_scores.append(score)
-                total_score += score
-                mean_score = total_score /  agent.n_games
-                plot_mean_scores.append(mean_score)
-                plot(plot_scores, plot_mean_scores)
+            plot_scores.append(score)
+            total_score += score
+            mean_score = total_score /  agent.n_games
+            plot_mean_scores.append(mean_score)
+            plot(plot_scores, plot_mean_scores)
 
-    if __name__=='__main__':
+if __name__=='__main__':
         train()
