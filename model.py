@@ -14,6 +14,7 @@ class Linear_QNet(nn.Module):
     def forward(self, x):
         x = F.relu(self.linear1(x))
         x = self.linear2(x)
+        return x
 
 
     def save(self, file_name='model.pth'):
@@ -47,19 +48,18 @@ class QTrainer:
             done = (done, )
 
         pred = self.model(state)
-
-        target = pred.clone()
+        target = pred.clone()        
+        
         for idx in range(len(done)):
             Q_new = reward[idx]
             if not done[idx]:
-                Q_new = reward + self.gamma * torch.max(self.model(next_state[idx]))
+                Q_new = reward[idx].item() + self.gamma * torch.max(self.model(next_state[idx])).item()
 
             target[idx][torch.argmax(action).item()] = Q_new
         
         self.optimiser.zero_grad()
         loss = self.criterion(target, pred)
         loss.backward()
-
         self.optimiser.step()
 
 
