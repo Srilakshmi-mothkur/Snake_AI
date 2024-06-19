@@ -18,7 +18,7 @@ To install and run Snake AI on your local machine, follow these steps:
 
 1. Clone the repository to your local machine:
    ```
-   git clone https://github.com/yourusername/snake-ai.git
+   git clone https://github.com/Srilakshmi-mothkur/snake-ai.git
    ```
 
 2. Navigate to the project directory:
